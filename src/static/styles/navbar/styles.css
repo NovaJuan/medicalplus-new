@@ -1,0 +1,68 @@
+.navbar {
+  background-color: #00b460;
+  width: 100%;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
+}
+.navbar .nav-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  padding: 1rem 3rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar .nav-logo {
+  display: block;
+  flex: 0rf;
+}
+.navbar .nav-logo img {
+  width: 10rem;
+}
+.navbar .current-date {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+}
+.navbar .current-date span {
+  font-size: 1rem;
+}
+.navbar .current-date p {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.navbar .nav-links {
+  margin-left: auto;
+  flex: 0;
+  display: flex;
+  align-items: center;
+}
+.navbar .nav-links a {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+}
+.navbar .nav-links .add-patient-link {
+  color: #fff;
+  background-color: #00cf30;
+  font-size: 1rem;
+  border: 1px solid #00ff6f;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+.navbar .nav-links .add-patient-link img {
+  width: 1rem;
+  margin-bottom: -0.1rem;
+}
+.navbar .nav-links .settings-link {
+  padding: 0 0.625rem;
+  background-color: #707070;
+}
+.navbar .nav-links .settings-link img {
+  width: 1.7rem;
+}
+
+/*# sourceMappingURL=styles.css.map */

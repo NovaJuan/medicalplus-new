@@ -1,0 +1,157 @@
+.home-dashboard {
+  display: grid;
+  grid-template-areas:
+    "patients schedules"
+    "patients generals";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 4rem;
+  row-gap: 2rem;
+  height: 100%;
+
+  .patients {
+    grid-area: patients;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .schedules {
+    display: flex;
+    flex-direction: column;
+    grid-area: schedules;
+  }
+  .generals {
+    display: flex;
+    flex-direction: column;
+    grid-area: generals;
+  }
+
+  .heading {
+    display: flex;
+    color: #008145;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    .title {
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .search {
+      margin-left: 5rem;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      border-bottom: 1px solid rgba(0, 0, 0, 1);
+
+      input {
+        width: 100%;
+        background: none;
+        border: none;
+        outline: none;
+        padding-left: 0.5rem;
+      }
+
+      input::placeholder {
+        color: rgba(0, 129, 69, 0.5);
+      }
+
+      button {
+        background: none;
+        border: none;
+        outline: none;
+        padding: 0.2rem 0;
+        padding-right: 0.5rem;
+      }
+    }
+  }
+
+  .list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fff;
+    border: 1px solid #008145;
+    min-height: 0;
+    flex: 1;
+
+    .items {
+      overflow-y: scroll;
+      list-style: none;
+      flex: 1;
+    }
+
+    .row {
+      text-transform: uppercase;
+    }
+
+    li.row,
+    .head {
+      display: grid;
+      grid-template-columns: 0.7fr 0.7fr 1fr;
+    }
+
+    li span {
+      padding: 0.3rem 0.4rem;
+      font-size: 0.8rem;
+      display: block;
+      border-right: 1px solid #008145;
+      border-bottom: 1px solid #008145;
+    }
+
+    li span:last-child {
+      border-right: none;
+    }
+
+    .head {
+      text-align: center;
+      background-color: #008145;
+      color: #fff;
+      span {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.5rem;
+        font-weight: 600;
+      }
+    }
+
+    &.schedule-list {
+      li.row,
+      .head {
+        grid-template-columns: 1fr 0.5fr;
+      }
+    }
+  }
+
+  .list,
+  .summary {
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .generals {
+    display: flex;
+    flex-direction: column;
+    .summary {
+      background-color: #006134;
+      list-style: none;
+      flex: 1;
+      color: #fff;
+      text-transform: uppercase;
+      padding: 1rem 1rem;
+      border: 4px solid #00ae5d;
+
+      li {
+        font-weight: 500;
+        height: 20%;
+        display: flex;
+        align-items: center;
+      }
+
+      span {
+        margin-left: 0.5rem;
+        font-weight: 500;
+        color: #00ff55;
+      }
+    }
+  }
+}
