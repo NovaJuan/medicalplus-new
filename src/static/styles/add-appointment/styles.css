@@ -1,0 +1,156 @@
+.add-appointment h1 {
+  font-size: 2rem;
+  text-align: center;
+  color: #008145;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.add-appointment .select-patient .box {
+  width: 35rem;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+}
+.add-appointment .select-patient .search-bar {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #949494;
+  margin-bottom: 1rem;
+}
+.add-appointment .select-patient .search-bar img {
+  width: 1.2rem;
+}
+.add-appointment .select-patient .search-bar input {
+  width: 100%;
+  background: none;
+  color: #008145;
+  border: none;
+  height: 2rem;
+  outline: none;
+}
+.add-appointment .select-patient .search-bar input::placeholder {
+  color: rgba(0, 129, 69, 0.6);
+}
+.add-appointment .select-patient .search-bar button {
+  cursor: pointer;
+  outline: none;
+  height: 2rem;
+  background: none;
+  border: none;
+}
+.add-appointment .select-patient .patients-list {
+  width: 100%;
+  height: 25rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-y: overlay;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  padding-right: 1rem;
+}
+.add-appointment .select-patient .patient-list-item:not(:last-child) {
+  margin-bottom: 1rem;
+}
+.add-appointment .select-date .box {
+  border: 1px solid #ccc;
+  padding: 1.5rem 2rem;
+}
+.add-appointment .select-date .error {
+  color: red;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+.add-appointment .select-date .wrapper {
+  display: flex;
+  width: 100%;
+}
+.add-appointment .select-date .left,
+.add-appointment .select-date .right {
+  width: 100%;
+}
+.add-appointment .select-date .left {
+  padding-right: 1rem;
+  border-right: 1px solid #ccc;
+}
+.add-appointment .select-date .left .react-calendar {
+  width: 100%;
+  margin-bottom: 0.7rem;
+}
+.add-appointment .select-date .left .save {
+  width: 100%;
+  display: block;
+  background-color: #008145;
+  color: #fff;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.5rem;
+}
+.add-appointment .select-date .left .select-hour {
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-appointment .select-date .left .select-hour h3 {
+  font-size: 1.2rem;
+  color: #008145;
+  font-weight: 600;
+}
+.add-appointment .select-date .left .select-hour span {
+  display: block;
+}
+.add-appointment .select-date .left .select-hour .hour {
+  display: flex;
+  padding: 0.5rem 1rem;
+}
+.add-appointment .select-date .left .select-hour .hour .selects {
+  font-size: 2.4rem;
+  color: #008145;
+  font-weight: 800;
+}
+.add-appointment .select-date .left .select-hour .hour select {
+  font-size: 2.4rem;
+  background: none;
+  color: #008145;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  border: 1px solid #ccc;
+  width: 5rem;
+}
+.add-appointment .select-date .left .select-hour .hour input[type=radio] {
+  visibility: hidden;
+}
+.add-appointment .select-date .left .select-hour .hour input[type=radio] ~ label {
+  font-weight: 600;
+  color: #ccc;
+}
+.add-appointment .select-date .left .select-hour .hour input[type=radio]:checked ~ label {
+  color: #008145;
+}
+.add-appointment .select-date .right {
+  padding-left: 1rem;
+}
+.add-appointment .select-date .right h2 {
+  font-size: 1.3rem;
+  color: #008145;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.add-appointment .select-date .appointments-list {
+  width: 100%;
+  height: 25rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-y: overlay;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  padding-right: 1rem;
+}
+.add-appointment .select-date .patient-list-item:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,36 +1,41 @@
 import "../../../static/styles/navbar/styles.css";
-import logo from "../../../static/img/logo.png";
-import gear from "../../../static/img/gear.png";
-import plusWhite from "../../../static/img/plus-white.png";
-import Link from "react-router-dom/Link";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          <img src={logo} alt="" />
+          <img src="file://media/static/logo.png" alt="" />
         </Link>
 
-        <div className="current-date">
-          <span>Fecha actual</span>
-          <p>
-            {new Date().toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </p>
-        </div>
-
         <div className="nav-links">
-          <Link to="/add-patient" className="add-patient-link">
-            Añadir Paciente <img src="" alt="" />
-            <img src={plusWhite} alt="" />
-          </Link>
-          <a href="#" className="settings-link">
-            <img src={gear} alt="" />
-          </a>
+          <div className="link">
+            <Link to="/" className="label">
+              Inicio
+            </Link>
+          </div>
+          <div className="link">
+            <span className="label">
+              Pacientes <img src="file://media/static/arrow-down.svg" alt="" />
+            </span>
+            <div className="dropdown">
+              <span>
+                <Link to="/">Ver Pacientes</Link>
+              </span>
+              <span>
+                <Link to="/patients/add">Añadir Paciente</Link>
+              </span>
+            </div>
+          </div>
+          <div className="link">
+            <span className="label">Citas</span>
+          </div>
+          <div className="link">
+            <Link to="/settings" className="label">
+              Configuración
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

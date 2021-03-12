@@ -1,0 +1,77 @@
+.ck-editor {
+  border: 1px solid #008145 !important;
+  display: flex;
+  flex-direction: column;
+  height: 100% !important;
+  max-height: 400px;
+  min-width: 100px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.ck-editor__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-y: overlay;
+}
+.ck-editor__editable_inline {
+  width: 100%;
+  display: block;
+  flex: 1;
+  max-height: 100%;
+  h2 {
+    display: block;
+    font-size: 1.5rem;
+    margin-top: 0.7rem;
+    margin-bottom: 0.3rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+  }
+
+  h3 {
+    display: block;
+    font-size: 1.3rem;
+    margin-top: 0.7rem;
+    margin-bottom: 0.3rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+  }
+
+  h4 {
+    display: block;
+    font-size: 1.1rem;
+    margin-top: 0.7rem;
+    margin-bottom: 0.3rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+  }
+
+  p {
+    line-height: 1.3rem;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  i {
+    font-style: italic;
+  }
+}
+.ck.ck-content ul,
+.ck.ck-content ul li {
+  list-style-type: inherit;
+}
+
+.ck.ck-content li {
+  margin: 0.3rem 0;
+}
+.ck.ck-content ul,
+.ck.ck-content ol {
+  padding-left: 40px;
+}

@@ -1,0 +1,185 @@
+.add-appointment {
+  h1 {
+    font-size: 2rem;
+    text-align: center;
+    color: #008145;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .select-patient {
+    .box {
+      width: 35rem;
+      border: 1px solid #ccc;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #949494;
+      margin-bottom: 1rem;
+
+      img {
+        width: 1.2rem;
+      }
+
+      input {
+        width: 100%;
+        background: none;
+        color: #008145;
+        border: none;
+        height: 2rem;
+        outline: none;
+        &::placeholder {
+          color: rgba(0, 129, 69, 0.6);
+        }
+      }
+
+      button {
+        cursor: pointer;
+        outline: none;
+        height: 2rem;
+        background: none;
+        border: none;
+      }
+    }
+
+    .patients-list {
+      width: 100%;
+      height: 25rem;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      overflow-y: overlay;
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      padding-right: 1rem;
+    }
+
+    .patient-list-item:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .select-date {
+    .box {
+      border: 1px solid #ccc;
+      padding: 1.5rem 2rem;
+    }
+
+    .error {
+      color: red;
+      font-size: 1.2rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .wrapper {
+      display: flex;
+      width: 100%;
+    }
+
+    .left,
+    .right {
+      width: 100%;
+    }
+
+    .left {
+      padding-right: 1rem;
+      border-right: 1px solid #ccc;
+
+      .react-calendar {
+        width: 100%;
+        margin-bottom: 0.7rem;
+      }
+
+      .save {
+        width: 100%;
+        display: block;
+        background-color: #008145;
+        color: #fff;
+        border: none;
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 0.5rem;
+      }
+
+      .select-hour {
+        margin-bottom: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        h3 {
+          font-size: 1.2rem;
+          color: #008145;
+          font-weight: 600;
+        }
+
+        span {
+          display: block;
+        }
+
+        .hour {
+          display: flex;
+          padding: 0.5rem 1rem;
+
+          .selects {
+            font-size: 2.4rem;
+            color: #008145;
+            font-weight: 800;
+          }
+
+          select {
+            font-size: 2.4rem;
+            background: none;
+            color: #008145;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            border: 1px solid #ccc;
+            width: 5rem;
+          }
+
+          input[type="radio"] {
+            visibility: hidden;
+          }
+
+          input[type="radio"] ~ label {
+            font-weight: 600;
+            color: #ccc;
+          }
+          input[type="radio"]:checked ~ label {
+            color: #008145;
+          }
+        }
+      }
+    }
+    .right {
+      padding-left: 1rem;
+
+      h2 {
+        font-size: 1.3rem;
+        color: #008145;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .appointments-list {
+      width: 100%;
+      height: 25rem;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      overflow-y: overlay;
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      padding-right: 1rem;
+    }
+
+    .patient-list-item:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}

@@ -4,8 +4,7 @@
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 }
 .navbar .nav-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
   width: 100%;
   padding: 1rem 3rem;
   justify-content: space-between;
@@ -13,24 +12,9 @@
 }
 .navbar .nav-logo {
   display: block;
-  flex: 0rf;
 }
 .navbar .nav-logo img {
-  width: 10rem;
-}
-.navbar .current-date {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #fff;
-}
-.navbar .current-date span {
-  font-size: 1rem;
-}
-.navbar .current-date p {
-  font-size: 1.5rem;
-  font-weight: 500;
+  width: 7rem;
 }
 .navbar .nav-links {
   margin-left: auto;
@@ -38,31 +22,55 @@
   display: flex;
   align-items: center;
 }
-.navbar .nav-links a {
-  height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 1.25rem;
+.navbar .nav-links .link {
+  position: relative;
+  margin: 0 0.2rem;
 }
-.navbar .nav-links .add-patient-link {
+.navbar .nav-links .label {
+  padding: 0.5rem 1rem;
   color: #fff;
-  background-color: #00cf30;
-  font-size: 1rem;
-  border: 1px solid #00ff6f;
   text-decoration: none;
-  margin-right: 1rem;
+  font-weight: 600;
+  display: flex;
+  cursor: pointer;
 }
-.navbar .nav-links .add-patient-link img {
-  width: 1rem;
-  margin-bottom: -0.1rem;
+.navbar .nav-links img {
+  width: 13px;
+  margin-left: 0.3rem;
 }
-.navbar .nav-links .settings-link {
-  padding: 0 0.625rem;
-  background-color: #707070;
+.navbar .nav-links .dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  list-style: none;
+  padding: 0.2rem 0.7rem;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: none;
 }
-.navbar .nav-links .settings-link img {
-  width: 1.7rem;
+.navbar .nav-links .dropdown span {
+  display: block;
+}
+.navbar .nav-links .dropdown span a {
+  white-space: nowrap;
+  display: block;
+  text-align: right;
+  color: #1e1e1e;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.9rem;
+}
+.navbar .nav-links .dropdown span a:hover {
+  color: #00b460;
+}
+.navbar .nav-links .dropdown span:not(:last-child) a {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.navbar .nav-links .link:hover .dropdown {
+  display: block;
 }
 
 /*# sourceMappingURL=styles.css.map */

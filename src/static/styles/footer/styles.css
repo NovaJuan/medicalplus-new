@@ -1,0 +1,31 @@
+.footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 0.5rem 3rem;
+  background-color: #008724;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.footer span {
+  color: #6fff96;
+}
+.footer .footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer .current-date {
+  text-align: center;
+}
+.footer .user {
+  min-width: -webkit-min-content;
+  flex: 1;
+}
+.footer .login-time {
+  min-width: -webkit-min-content;
+  flex: 1;
+  text-align: right;
+}
+
+/*# sourceMappingURL=styles.css.map */

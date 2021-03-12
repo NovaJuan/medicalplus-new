@@ -1,63 +1,211 @@
 import { useState } from "react";
 import MainLayout from "../../layouts/MainLayout";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "../../../static/styles/add-patient/styles.css";
-import "@ckeditor/ckeditor5-build-classic/build/translations/es";
 
-export default function AddPatient() {
-  const [patient, setPatient] = useState({
-    name: "",
-    id: "",
-    sex: "",
-    borndate: "",
-    age: "",
-    weight: "",
-    height: "",
-    phones: "",
-    emails: "",
-    address: "",
-    insurance: "",
-    story: "",
-    image: "",
+import Editor from "../../shared/Editor";
+
+const { ipcRenderer } = window.require("electron");
+
+const PATIENT_DEFAULT = {
+  name: "",
+  docid: "",
+  sex: "0",
+  bornday: "",
+  bornmonth: "",
+  bornyear: "",
+  age: "",
+  weight: "",
+  height: "",
+  phones: "",
+  emails: "",
+  address: "",
+  insurance: "",
+  story: "",
+  image: "",
+};
+
+const ERROR_DEFAULT = {
+  name: null,
+  docid: null,
+  sex: null,
+  bornday: null,
+  bornmonth: null,
+  bornyear: null,
+  age: null,
+  weight: null,
+  height: null,
+  phones: null,
+  emails: null,
+  address: null,
+  insurance: null,
+  story: null,
+  image: null,
+};
+
+export default function AddPatient({ history }) {
+  const [state, setState] = useState({
+    patient: { ...PATIENT_DEFAULT },
+    errors: { ...ERROR_DEFAULT },
   });
 
+  const [saving, setSaving] = useState(false);
+  const [processing, setProcessing] = useState(false);
+
+  const runningSave = (isRunning) => {
+    setProcessing(isRunning);
+    setSaving(isRunning);
+  };
+
+  const { patient, errors } = state;
+
   const onChangeText = (e) => {
-    setPatient({
-      ...patient,
-      [e.target.name]: e.target.value,
+    setState({
+      ...state,
+      patient: {
+        ...patient,
+        [e.target.name]: e.target.value,
+      },
     });
+  };
+
+  const onChangeDocument = (e) => {
+    const regex = /^(([a-z]?)+([1-9]?)([0-9]?)+)$/i;
+    if (regex.test(e.target.value)) {
+      setState({
+        ...state,
+        patient: {
+          ...patient,
+          docid: e.target.value.toUpperCase(),
+        },
+      });
+    }
   };
 
   const onChangeImage = (e) => {
     if (e.target.files.length > 0) {
-      setPatient({
-        ...patient,
-        image: e.target.files[0].path,
+      setState({
+        ...state,
+        patient: {
+          ...patient,
+          image: e.target.files[0].path,
+        },
       });
     }
   };
 
   const onChangeNumber = (e) => {
     if (!isNaN(e.target.value)) {
-      setPatient({
-        ...patient,
-        [e.target.name]: e.target.value,
+      setState({
+        ...state,
+        patient: {
+          ...patient,
+          [e.target.name]: e.target.value,
+        },
+      });
+    }
+  };
+
+  const onChangeBornDate = (e) => {
+    if (e.target.value.length > 10) {
+      return;
+    }
+
+    if (e.target.value.length < patient.borndate.length) {
+      setState({
+        ...state,
+        patient: {
+          ...patient,
+          [e.target.name]: e.target.value,
+        },
+      });
+      return;
+    }
+
+    const lastChar =
+      e.target.value.length > 0
+        ? e.target.value[e.target.value.length - 1]
+        : "";
+
+    if (!isNaN(lastChar)) {
+      if (e.target.value.length === 2) {
+        e.target.value += "/";
+      } else if (e.target.value.length === 5) {
+        e.target.value += "/";
+      }
+
+      setState({
+        ...state,
+        patient: {
+          ...patient,
+          [e.target.name]: e.target.value,
+        },
       });
     }
   };
 
   const onChangeStory = (event, editor) => {
     const data = editor.getData();
-    setPatient({
-      ...patient,
-      story: data,
-    });
+    setState((prev) => ({
+      ...prev,
+      patient: {
+        ...prev.patient,
+        story: data,
+      },
+    }));
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(patient);
+
+    if (saving === true) {
+      return;
+    }
+
+    runningSave(true);
+
+    const newState = { ...state };
+    newState.errors = { ...ERROR_DEFAULT };
+    let noErrors = true;
+
+    const required = [
+      "name",
+      "docid",
+      "sex",
+      "bornmonth",
+      "bornday",
+      "bornyear",
+      "age",
+      "weight",
+      "height",
+      "phones",
+      "address",
+      "story",
+    ];
+
+    required.forEach((x) => {
+      if (!patient[x]) {
+        newState.errors[x] = "Requerido.";
+        noErrors = false;
+      }
+    });
+
+    setState(newState);
+    if (!noErrors) {
+      runningSave(false);
+      return;
+    }
+
+    const newPatient = {
+      ...patient,
+      borndate: `${patient.bornday}/${patient.bornmonth}/${patient.bornyear}`,
+    };
+    delete newPatient.bornday;
+    delete newPatient.bornmonth;
+    delete newPatient.bornyear;
+
+    ipcRenderer
+      .invoke("patients", "create", newPatient)
+      .then(() => history.push("/"));
   };
 
   return (
@@ -82,7 +230,11 @@ export default function AddPatient() {
                   </button>
                 </div>
                 <img
-                  src={patient.image ? patient.image : ""}
+                  src={
+                    patient.image
+                      ? patient.image
+                      : "file://media/static/no-image.jpg"
+                  }
                   alt=""
                   className="preview"
                 />
@@ -97,16 +249,18 @@ export default function AddPatient() {
                     value={patient.name}
                     onChange={onChangeText}
                   />
+                  <span className="error">{errors.name && errors.name}</span>
                 </div>
                 <div>
-                  <label htmlFor="id">Documento de Identidad</label>
+                  <label htmlFor="docid">Documento de Identidad</label>
                   <input
                     type="text"
-                    name="id"
-                    id="id"
-                    value={patient.id}
-                    onChange={onChangeText}
+                    name="docid"
+                    id="docid"
+                    value={patient.docid}
+                    onChange={onChangeDocument}
                   />
+                  <span className="error">{errors.docid && errors.docid}</span>
                 </div>
                 <div className="sex">
                   <label htmlFor="sex">Sexo</label>
@@ -115,32 +269,71 @@ export default function AddPatient() {
                       type="radio"
                       name="sex"
                       id="male"
-                      value="male"
-                      defaultChecked={true}
+                      value="0"
+                      defaultChecked={patient.sex === "0"}
                       onChange={onChangeText}
                     />
-                    <label htmlFor="male">Maculino</label>
+                    <label htmlFor="male">M</label>
                   </span>
                   <span>
                     <input
                       type="radio"
                       name="sex"
                       id="female"
-                      value="female"
+                      value="1"
+                      defaultChecked={patient.sex === "1"}
                       onChange={onChangeText}
                     />
-                    <label htmlFor="female">Femenino</label>
+                    <label htmlFor="female">F</label>
                   </span>
+                  <span className="error">{errors.sex && errors.sex}</span>
                 </div>
                 <div>
                   <label htmlFor="borndate">Fecha de Nacimiento</label>
-                  <input
-                    type="text"
-                    name="borndate"
-                    id="borndate"
-                    onChange={onChangeText}
-                    value={patient.borndate}
-                  />
+                  <div className="_3fields">
+                    <span>
+                      <label htmlFor="bornday">Dia</label>
+                      <input
+                        type="text"
+                        name="bornday"
+                        id="bornday"
+                        onChange={onChangeNumber}
+                        value={patient.bornday}
+                        placeholder="31"
+                      />
+                      <span className="error">
+                        {errors.bornday && errors.bornday}
+                      </span>
+                    </span>
+                    <span>
+                      <label htmlFor="bornmonth">Mes</label>
+                      <input
+                        type="text"
+                        name="bornmonth"
+                        id="bornmonth"
+                        onChange={onChangeNumber}
+                        value={patient.bornmonth}
+                        placeholder="12"
+                      />
+                      <span className="error">
+                        {errors.bornmonth && errors.bornmonth}
+                      </span>
+                    </span>
+                    <span>
+                      <label htmlFor="bornyear">Año</label>
+                      <input
+                        type="text"
+                        name="bornyear"
+                        id="bornyear"
+                        onChange={onChangeNumber}
+                        value={patient.bornyear}
+                        placeholder="2000"
+                      />
+                      <span className="error">
+                        {errors.bornyear && errors.bornyear}
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -155,6 +348,7 @@ export default function AddPatient() {
                     onChange={onChangeNumber}
                     value={patient.age}
                   />
+                  <span className="error">{errors.age && errors.age}</span>
                 </span>
                 <span>
                   <label htmlFor="weight">Peso</label>
@@ -166,6 +360,9 @@ export default function AddPatient() {
                     value={patient.weight}
                   />
                   <small>KG</small>
+                  <span className="error">
+                    {errors.weight && errors.weight}
+                  </span>
                 </span>
                 <span>
                   <label htmlFor="height">Altura</label>
@@ -177,27 +374,38 @@ export default function AddPatient() {
                     value={patient.height}
                   />
                   <small>cm</small>
+                  <span className="error">
+                    {errors.height && errors.height}
+                  </span>
                 </span>
               </div>
-              <div className="field">
-                <label htmlFor="phones">Telefonos</label>
-                <input
-                  type="text"
-                  id="phones"
-                  name="phones"
-                  onChange={onChangeText}
-                  value={patient.phones}
-                />
-              </div>
-              <div className="field">
-                <label htmlFor="emails">Correos</label>
-                <input
-                  type="text"
-                  id="emails"
-                  name="emails"
-                  onChange={onChangeText}
-                  value={patient.emails}
-                />
+              <div className="_2fields">
+                <span>
+                  <label htmlFor="phones">Telefonos</label>
+                  <input
+                    type="text"
+                    id="phones"
+                    name="phones"
+                    onChange={onChangeText}
+                    value={patient.phones}
+                  />
+                  <span className="error">
+                    {errors.phones && errors.phones}
+                  </span>
+                </span>
+                <span>
+                  <label htmlFor="emails">Correos</label>
+                  <input
+                    type="text"
+                    id="emails"
+                    name="emails"
+                    onChange={onChangeText}
+                    value={patient.emails}
+                  />
+                  <span className="error">
+                    {errors.emails && errors.emails}
+                  </span>
+                </span>
               </div>
               <div className="field">
                 <label htmlFor="address">Dirección</label>
@@ -208,6 +416,9 @@ export default function AddPatient() {
                   onChange={onChangeText}
                   value={patient.address}
                 />
+                <span className="error">
+                  {errors.address && errors.address}
+                </span>
               </div>
               <div className="field">
                 <label htmlFor="insurance">Aseguradora</label>
@@ -218,29 +429,19 @@ export default function AddPatient() {
                   onChange={onChangeText}
                   value={patient.insurance}
                 />
+                <span className="error">
+                  {errors.insurance && errors.insurance}
+                </span>
               </div>
             </div>
           </div>
-          <button className="save-btn">GUARDAR</button>
+          <button className="save-btn" disabled={processing}>
+            {saving ? "GUARDANDO..." : "GUARDAR"}
+          </button>
         </form>
         <div className="story">
-          <CKEditor
-            editor={ClassicEditor}
-            value={patient.story}
-            onChange={onChangeStory}
-            config={{
-              language: "es",
-              toolbar: [
-                "heading",
-                "bold",
-                "italic",
-                "numberedList",
-                "bulletedList",
-                "undo",
-                "redo",
-              ],
-            }}
-          />
+          <Editor data={patient.story} onChange={onChangeStory} />
+          <span className="error">{errors.story && errors.story}</span>
         </div>
       </div>
     </MainLayout>

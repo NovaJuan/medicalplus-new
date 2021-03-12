@@ -1,78 +1,118 @@
 import "../../../static/styles/home/styles.css";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import plusGreen from "../../../static/img/plus-green.png";
-import search from "../../../static/img/search.png";
 import MainLayout from "../../layouts/MainLayout";
+import PatientListItem from "../../shared/PatientListItem";
+import AppointmentListItem from "../../shared/AppointmentListItem";
 
-export default function Home() {
+import { usePatientsContext } from "../../../contexts/patients";
+import { useAppointmentsContext } from "../../../contexts/appointments";
+
+export default function Home({ history }) {
+  const {
+    getAllPatients,
+    patients,
+    search,
+    changeSearch,
+    searching,
+    changeSearching,
+    clearSearch,
+  } = usePatientsContext();
+  const { getAllAppointments, appointments } = useAppointmentsContext();
+
+  useEffect(() => {
+    getAllAppointments();
+    getAllPatients(true);
+  }, []);
+
+  function onSubmitPatients(e) {
+    e.preventDefault();
+
+    changeSearching(true);
+    getAllPatients();
+  }
+
   return (
     <MainLayout>
       <div className="home-dashboard">
         <div className="patients">
-          <div className="heading">
-            <h2 className="title">Pacientes</h2>
-            <form className="search">
-              <input type="text" placeholder="Buscar paciente" />
-              <button type="submit">
-                <img src={search} alt="" />
-              </button>
+          <div className="header">
+            <h1>PACIENTES</h1>
+            <Link to="/patients/add">Añadir Paciente</Link>
+          </div>
+          <div className="search">
+            <form className="search-bar" onSubmit={onSubmitPatients}>
+              <input
+                type="text"
+                placeholder="Buscar Paciente"
+                id="search-input"
+                value={search}
+                onChange={changeSearch}
+              />
+              {searching === false && (
+                <button type="submit">
+                  <img src="file://media/static/search.png" alt="" />
+                </button>
+              )}
+              {searching && (
+                <button type="button" onClick={clearSearch}>
+                  <img src="file://media/static/cancel.png" alt="" />
+                </button>
+              )}
             </form>
           </div>
-          <div className="list patient-list">
-            <p className="head">
-              <span>Documento</span>
-              <span>Nombre</span>
-              <span>Ultima consulta</span>
-            </p>
-            <ul className="items">
-              <li className="row">
-                <span>v-12.345.678</span>
-                <span>John Doe</span>
-                <span>01/01/2021 09:00 AM</span>
-              </li>
-            </ul>
-          </div>
+          <section>
+            {searching === false && <h2>Ultimos Pacientes Atendidos</h2>}
+            <div className="patients-wrapper">
+              {patients &&
+                patients.map((patient) => (
+                  <PatientListItem
+                    patient={patient}
+                    key={patient.id}
+                    onClick={() => history.push(`/patients/${patient.id}`)}
+                  />
+                ))}
+
+              {patients && patients.length === 0 && (
+                <p className="not-found">No hay pacientes encontrados.</p>
+              )}
+            </div>
+          </section>
         </div>
-        <div className="schedules">
-          <div className="heading">
-            <h2 className="title">
-              Consultas Programadas para hoy <img src={plusGreen} alt="" />
-            </h2>
+        <div className="appointments">
+          <div className="header">
+            <h1>CITAS</h1>
+            <Link to="/appointments/add">Añadir Cita</Link>
           </div>
-          <div className="list schedule-list">
-            <p className="head">
-              <span>Paciente</span>
-              <span>Hora</span>
-            </p>
-            <ul className="items">
-              <li className="row">
-                <span>v-12.345.678 | John Doe</span>
-                <span>09:00 AM</span>
-              </li>
-            </ul>
+          <div className="search">
+            <form className="search-bar">
+              <input
+                type="text"
+                placeholder="Buscar cita de paciente"
+                id="search-input"
+              />
+              <button type="submit">
+                <img src="file://media/static/search.png" alt="" />
+              </button>
+            </form>
+            <div className="use-calendar">Buscar por Fecha</div>
           </div>
-        </div>
-        <div className="generals">
-          <div className="heading">
-            <h2 className="title">Datos Generales</h2>
-          </div>
-          <ul className="summary">
-            <li>
-              Usuario: <span>Doctor 1</span>
-            </li>
-            <li>
-              Ultimo Inicio de Sesión: <span>20/02/2021 06:30 PM</span>
-            </li>
-            <li>
-              Primer Inicio de sesión del dia: <span>A las 09:00 AM</span>
-            </li>
-            <li>
-              Pacientes atendidos hoy: <span>15</span>
-            </li>
-            <li>
-              Pacientes añadidos hoy: <span>7</span>
-            </li>
-          </ul>
+          <section>
+            <h2>Citas de Hoy</h2>
+            <div className="appointments-wrapper">
+              {appointments &&
+                appointments.map((appointment) => (
+                  <AppointmentListItem
+                    key={appointment.id}
+                    appointment={appointment}
+                  />
+                ))}
+              {appointments && appointments.length === 0 && (
+                <p>No hay citas encontradas</p>
+              )}
+            </div>
+          </section>
         </div>
       </div>
     </MainLayout>

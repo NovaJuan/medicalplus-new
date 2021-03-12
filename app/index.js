@@ -1,13 +1,12 @@
 const electron = require("electron");
 const path = require("path");
-const { app, BrowserWindow, protocol, dialog } = electron;
+const { app, BrowserWindow, protocol, dialog, ipcMain } = electron;
 
 let win;
 
 function startup() {
   const registered = protocol.interceptFileProtocol("file", (req, cb) => {
     const filepath = req.url.replace("file://", "").replace(/(%20)+/g, " ");
-    console.log(filepath);
     if (req.url.includes("file://media")) {
       cb(path.join(__dirname, filepath));
     } else {
@@ -20,8 +19,8 @@ function startup() {
   }
 
   win = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 800,
+    height: 600,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -34,6 +33,13 @@ function startup() {
   } else {
     win.loadURL("http://localhost:3000");
   }
+
+  startHandlers(win);
+}
+
+function startHandlers(window) {
+  ipcMain.handle("patients", require("./handlers/patients")(window));
+  ipcMain.handle("appointments", require("./handlers/appointments")(window));
 }
 
 app.whenReady().then(startup);

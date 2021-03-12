@@ -1,0 +1,194 @@
+.patient-details-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 4rem;
+}
+@media (min-width: 1000px) {
+  .patient-details-dashboard {
+    grid-template-columns: 0.7fr 1fr;
+  }
+}
+.patient-details-dashboard .error {
+  font-size: 0.7rem;
+  color: red;
+}
+.patient-details-dashboard .info-area .info {
+  width: 100%;
+  background-color: #fff;
+  padding: 1.5rem 2rem;
+  border: 1px solid #008145;
+}
+.patient-details-dashboard .info-area .info .heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.patient-details-dashboard .info-area .info .heading h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-right: 1rem;
+}
+.patient-details-dashboard .info-area .info .heading .line {
+  width: 100%;
+  height: 3px;
+  background-color: #008145;
+}
+.patient-details-dashboard .info-area .info .main-info {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+.patient-details-dashboard .info-area .info .main-info .image {
+  margin-right: 1rem;
+}
+.patient-details-dashboard .info-area .info .main-info .image div {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.patient-details-dashboard .info-area .info .main-info .image img {
+  width: 10rem;
+  height: 10rem;
+  border: 1px solid #008145;
+  object-fit: cover;
+}
+.patient-details-dashboard .info-area .info .main-info .image button {
+  background-color: #008145;
+  color: #fff;
+  font-size: 0.8rem;
+  border: none;
+  padding: 0.3rem 0.6rem;
+  margin-left: 0.5rem;
+  width: 100%;
+}
+.patient-details-dashboard .info-area .info .main-info .image input[type=file] {
+  position: absolute;
+  top: -9999999px;
+  left: -9999999px;
+}
+.patient-details-dashboard .info-area .info .main-info .fields div {
+  margin-bottom: 0.5rem;
+}
+.patient-details-dashboard .info-area .info .main-info .fields label {
+  margin-bottom: 0.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: block;
+}
+.patient-details-dashboard .info-area .info .main-info .fields input {
+  width: 100%;
+  border: 1px solid #008145;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  outline: none;
+}
+.patient-details-dashboard .info-area .info .main-info .fields .sex span {
+  display: inline-block;
+  margin-right: 1rem;
+}
+.patient-details-dashboard .info-area .info .main-info .fields .sex span input {
+  width: auto;
+  visibility: hidden;
+}
+.patient-details-dashboard .info-area .info .main-info .fields .sex span label {
+  display: inline-block;
+  margin-left: 0.2rem;
+  position: relative;
+}
+.patient-details-dashboard .info-area .info .main-info .fields .sex span label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #008145;
+  transform: translate(-115%, -50%);
+}
+.patient-details-dashboard .info-area .info .main-info .fields .sex span label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #fff;
+  transform: translate(-180%, -50%);
+}
+.patient-details-dashboard .info-area .info .main-info .fields .sex span input[type=radio]:checked ~ label::after {
+  background-color: #008145;
+}
+.patient-details-dashboard .info-area .info .secondary-info div {
+  margin-bottom: 0.5rem;
+}
+.patient-details-dashboard .info-area .info .secondary-info label {
+  margin-bottom: 0.1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: block;
+}
+.patient-details-dashboard .info-area .info .secondary-info input {
+  width: 100%;
+  border: 1px solid #008145;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  outline: none;
+}
+.patient-details-dashboard .info-area .info .secondary-info ._3fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1rem;
+}
+.patient-details-dashboard .info-area .info .secondary-info ._3fields span {
+  position: relative;
+}
+.patient-details-dashboard .info-area .info .secondary-info ._3fields input {
+  padding-right: 2rem;
+}
+.patient-details-dashboard .info-area .info .secondary-info ._3fields small {
+  position: absolute;
+  right: 0.5rem;
+  top: 1.5rem;
+  color: #a8a8a8;
+  font-size: 0.8rem;
+}
+.patient-details-dashboard .info-area .info .secondary-info ._2fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 1rem;
+}
+.patient-details-dashboard .save-btn,
+.patient-details-dashboard .print-btn,
+.patient-details-dashboard .delete-btn {
+  width: 100%;
+  display: block;
+  padding: 0.5rem 1rem;
+  background-color: #008145;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+.patient-details-dashboard .print-btn {
+  background-color: #004381;
+}
+.patient-details-dashboard .delete-btn {
+  background-color: #da1111;
+}
+.patient-details-dashboard ._3btns {
+  margin-top: 1rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1rem;
+}
+.patient-details-dashboard .story {
+  width: 100%;
+  max-width: 100%;
+}
+
+/*# sourceMappingURL=styles.css.map */

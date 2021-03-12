@@ -4,8 +4,7 @@
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 
   .nav-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
     width: 100%;
     padding: 1rem 3rem;
     justify-content: space-between;
@@ -15,25 +14,7 @@
   .nav-logo {
     display: block;
     img {
-      width: 10rem;
-    }
-    flex: 0rf;
-  }
-
-  .current-date {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #fff;
-
-    span {
-      font-size: 1rem;
-    }
-
-    p {
-      font-size: 1.5rem;
-      font-weight: 500;
+      width: 7rem;
     }
   }
 
@@ -43,33 +24,62 @@
     display: flex;
     align-items: center;
 
-    a {
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 1.25rem;
+    .link {
+      position: relative;
+      margin: 0 0.2rem;
     }
 
-    .add-patient-link {
+    .label {
+      padding: 0.5rem 1rem;
       color: #fff;
-      background-color: #00cf30;
-      font-size: 1rem;
-      border: 1px solid #00ff6f;
       text-decoration: none;
-      margin-right: 1rem;
-      img {
-        width: 1rem;
-        margin-bottom: -0.1rem;
-      }
+      font-weight: 600;
+      display: flex;
+      cursor: pointer;
     }
 
-    .settings-link {
-      img {
-        width: 1.7rem;
+    img {
+      width: 13px;
+      margin-left: 0.3rem;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      list-style: none;
+      padding: 0.2rem 0.7rem;
+      background-color: #fff;
+      border-radius: 2px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+      z-index: 9999;
+
+      span {
+        display: block;
+        a {
+          white-space: nowrap;
+          display: block;
+          text-align: right;
+          color: #1e1e1e;
+          cursor: pointer;
+          text-decoration: none;
+          padding: 0.5rem 0.7rem;
+          font-size: 0.9rem;
+        }
+
+        a:hover {
+          color: #00b460;
+        }
       }
-      padding: 0 0.625rem;
-      background-color: #707070;
+      span:not(:last-child) a {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      display: none;
+    }
+
+    .link:hover .dropdown {
+      display: block;
     }
   }
 }
