@@ -1,7 +1,21 @@
 import "./styles/styles.css";
 import { docidFormatter } from "../../../lib/patientHelpers";
 
+import { useModal } from "../../../contexts/modal";
+import { useAppointmentsContext } from "../../../contexts/appointments";
+import AppointmentModal from "../AppointmentModal";
+
 export default function AppointmentListItem({ appointment }) {
+  const modal = useModal();
+  const { getAppointment, clearFetchedAppointment } = useAppointmentsContext();
+
+  function openModal() {
+    getAppointment(appointment.id);
+    modal(AppointmentModal, () => {
+      clearFetchedAppointment();
+    });
+  }
+
   const appointmentTime = new Date(appointment.date)
     .toLocaleTimeString("es-ES", {
       hour12: true,
@@ -12,7 +26,7 @@ export default function AppointmentListItem({ appointment }) {
     .replace(" a. m.", "<small>AM</small>");
 
   return (
-    <div className="appointment-list-item">
+    <div className="appointment-list-item" onClick={openModal}>
       <img
         src={`file://media/${
           appointment.patient.image || "static/no-image.jpg"

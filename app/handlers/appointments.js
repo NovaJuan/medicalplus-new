@@ -7,12 +7,10 @@ module.exports = (window) => {
         return await getAppointments(event, window, data);
       case "create":
         return await createAppointment(event, window, data);
-      // case "update":
-      //   return await updatePatient(event, window, data);
-      // case "get":
-      //   return await getPatient(event, window, data);
-      // case "delete":
-      //   return await deletePatient(event, window, data);
+      case "get":
+        return await getAppointment(event, window, data);
+      case "delete":
+        return await deleteAppointment(event, window, data);
 
       default:
         return null;
@@ -55,9 +53,16 @@ async function getAppointments(event, window, data) {
 
 async function getAppointment(event, window, data) {
   const db = await startDB();
-  const patient = await db.get(`SELECT * FROM patients WHERE id=?`, data);
+  const appointment = await db.get(
+    `SELECT * FROM appointments WHERE id=?`,
+    data
+  );
+  appointment.patient = await db.get(
+    "SELECT * FROM patients WHERE id=?",
+    appointment.patient
+  );
   await db.close();
-  return patient;
+  return appointment;
 }
 
 async function createAppointment(event, window, data) {
@@ -107,36 +112,25 @@ async function createAppointment(event, window, data) {
   return true;
 }
 
-// async function deletePatient(event, window, data) {
-//   const { dialog } = require("electron");
+async function deleteAppointment(event, window, data) {
+  const { dialog } = require("electron");
 
-//   const res = await dialog.showMessageBox(window, {
-//     title: "Eliminar Paciente",
-//     message: "Estas segura/seguro de eleminar este paciente?",
-//     buttons: ["Yes", "No"],
-//     type: "warning",
-//   });
+  const res = await dialog.showMessageBox(window, {
+    title: "Eliminar Cita",
+    message: "Estas segura/seguro de eleminar esta cita?",
+    buttons: ["Yes", "No"],
+    type: "warning",
+  });
 
-//   if (res.response === 1) {
-//     return false;
-//   }
+  if (res.response === 1) {
+    return false;
+  }
 
-//   const db = await startDB();
+  const db = await startDB();
 
-//   const patient = await db.get(`SELECT * FROM patients WHERE id = ?`, data);
+  await db.run(`DELETE FROM appointments WHERE id = ?`, data);
 
-//   if (patient.image !== null) {
-//     const { unlink } = require("fs-extra");
-//     const path = require("path");
+  await db.close();
 
-//     try {
-//       await unlink(path.join(__dirname, "../media", patient.image));
-//     } catch {}
-//   }
-
-//   await db.run(`DELETE FROM patients WHERE id = ?`, data);
-
-//   await db.close();
-
-//   return true;
-// }
+  return true;
+}

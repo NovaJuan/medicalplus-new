@@ -8,7 +8,7 @@ export const Container = styled.div`
   left: 0;
   z-index: 99999;
   background-color: rgba(0, 0, 0, 0.5);
-  padding: 3rem;
+  padding: 4rem 1rem;
 `;
 
 export const ModalContent = styled.div`
@@ -16,5 +16,21 @@ export const ModalContent = styled.div`
   width: 100%;
   max-width: 40rem;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 2rem;
+  position: relative;
+
+  .close-btn {
+    top: -3rem;
+    right: -3rem;
+    position: absolute;
+    font-size: 2rem;
+    z-index: 9999999;
+    color: #fff;
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    outline: none;
+  }
 `;

@@ -31,6 +31,16 @@ export function AppointmentsContextProvider({ children }) {
     setAppointments(rows);
   }
 
+  async function getAppointment(id) {
+    const { ipcRenderer } = window.require("electron");
+    const row = await ipcRenderer.invoke("appointments", "get", id);
+    setAppointment(row);
+  }
+
+  function clearFetchedAppointment() {
+    setAppointment(null);
+  }
+
   function changeTime(type, time) {
     if (type === "hour") {
       setHour(time);
@@ -108,6 +118,8 @@ export function AppointmentsContextProvider({ children }) {
         changeMeridem,
         createAppointment,
         error,
+        getAppointment,
+        clearFetchedAppointment,
       }}
     >
       {children}
