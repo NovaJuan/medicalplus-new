@@ -1,22 +1,15 @@
-.home-dashboard {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: 100%;
+import styled from "styled-components";
 
-  .patients {
-    padding-right: 2rem;
-    border-right: 1px solid #ccc;
-  }
-  .appointments {
-    padding-left: 2rem;
-  }
+export const Container = styled.div`
+  padding-left: 2rem;
 
   .header {
-    display: flex;
-    justify-content: space-between;
     width: 100%;
     align-items: center;
     margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 
     h1 {
       color: #008145;
@@ -24,12 +17,25 @@
       font-weight: 700;
     }
 
+    .links {
+      padding: 0.4rem;
+    }
+
     a {
       text-decoration: none;
-      color: #fff;
-      background-color: #008145;
+      color: #7f8c8d;
       font-weight: 500;
-      padding: 0.6rem 1rem;
+      padding: 0.4rem 1rem;
+      display: inline-block;
+      font-size: 0.9rem;
+    }
+
+    a:hover {
+      color: #008145;
+    }
+
+    a:not(:last-child) {
+      border-right: 1px solid #008145;
     }
   }
 
@@ -66,7 +72,7 @@
     }
   }
 
-  .appointments .search {
+  & .search {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -93,23 +99,7 @@
     }
   }
 
-  .patients section {
-    .patients-wrapper {
-      display: grid;
-      grid-template-columns: 1fr;
-      column-gap: 1rem;
-      flex-wrap: wrap;
-      overflow-y: overlay;
-      max-height: calc(100vh - 20rem);
-      padding-right: 1rem;
-
-      @media (min-width: 1130px) {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-  }
-
-  .appointments section {
+  & section {
     .appointments-wrapper {
       display: grid;
       grid-template-columns: 1fr;
@@ -122,4 +112,4 @@
       }
     }
   }
-}
+`;

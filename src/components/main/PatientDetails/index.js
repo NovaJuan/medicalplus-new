@@ -4,6 +4,9 @@ import "../../../static/styles/patient-details/styles.css";
 
 import Editor from "../../shared/Editor";
 
+import { usePatientsModel } from "../../../models/patient";
+import { useToast } from "../../../contexts/toast";
+
 const { ipcRenderer } = window.require("electron");
 
 const ERROR_DEFAULT = {
@@ -28,32 +31,25 @@ export default function PatientDetails({ match: { params }, history }) {
     errors: { ...ERROR_DEFAULT },
   });
 
-  const [saving, setSaving] = useState(false);
-  const [printing, setPrinting] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [processing, setProcessing] = useState(false);
+  const { updatePatient, deletePatient } = usePatientsModel();
+  const toast = useToast();
 
-  const runningSave = (isRunning) => {
-    setProcessing(isRunning);
-    setSaving(isRunning);
-  };
-  const runningDelete = (isRunning) => {
-    setProcessing(isRunning);
-    setDeleting(isRunning);
-  };
-  const runningPrint = (isRunning) => {
-    setProcessing(isRunning);
-    setPrinting(isRunning);
-  };
+  const [processing, setProcessing] = useState(false);
 
   const { patient, errors } = state;
 
   useEffect(() => {
     if (patient === null) {
       ipcRenderer.invoke("patients", "get", params.id).then((data) => {
+        const fetchedPatient = { ...data };
+        const borndate = fetchedPatient.borndate.split("/");
+        fetchedPatient.bornday = borndate[0];
+        fetchedPatient.bornmonth = borndate[1];
+        fetchedPatient.bornyear = borndate[2];
+        delete fetchedPatient.borndate;
         setState({
           ...state,
-          patient: data,
+          patient: fetchedPatient,
         });
       });
     }
@@ -106,44 +102,6 @@ export default function PatientDetails({ match: { params }, history }) {
     }
   };
 
-  const onChangeBornDate = (e) => {
-    if (e.target.value.length > 10) {
-      return;
-    }
-
-    if (e.target.value.length < patient.borndate.length) {
-      setState({
-        ...state,
-        patient: {
-          ...patient,
-          [e.target.name]: e.target.value,
-        },
-      });
-      return;
-    }
-
-    const lastChar =
-      e.target.value.length > 0
-        ? e.target.value[e.target.value.length - 1]
-        : "";
-
-    if (!isNaN(lastChar)) {
-      if (e.target.value.length === 2) {
-        e.target.value += "/";
-      } else if (e.target.value.length === 5) {
-        e.target.value += "/";
-      }
-
-      setState({
-        ...state,
-        patient: {
-          ...patient,
-          [e.target.name]: e.target.value,
-        },
-      });
-    }
-  };
-
   const onChangeStory = (event, editor) => {
     const data = editor.getData();
     setState((prev) => ({
@@ -158,12 +116,11 @@ export default function PatientDetails({ match: { params }, history }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (saving === true) {
-      console.log("hey");
+    if (processing === true) {
       return;
     }
 
-    runningSave(true);
+    setProcessing(true);
 
     const newState = { ...state };
     newState.errors = { ...ERROR_DEFAULT };
@@ -173,7 +130,9 @@ export default function PatientDetails({ match: { params }, history }) {
       "name",
       "docid",
       "sex",
-      "borndate",
+      "bornmonth",
+      "bornday",
+      "bornyear",
       "age",
       "weight",
       "height",
@@ -191,29 +150,50 @@ export default function PatientDetails({ match: { params }, history }) {
 
     setState(newState);
     if (!noErrors) {
-      runningSave();
+      setProcessing(false);
       return;
     }
 
-    ipcRenderer.invoke("patients", "update", patient).then((newPatient) => {
-      setState({ ...state, patient: newPatient });
-      runningSave(false);
+    const newPatient = {
+      ...patient,
+      borndate: `${patient.bornday}/${patient.bornmonth}/${patient.bornyear}`,
+    };
+    delete newPatient.bornday;
+    delete newPatient.bornmonth;
+    delete newPatient.bornyear;
+
+    console.log(newPatient);
+
+    updatePatient(newPatient).then((newPatient) => {
+      setState((prev) => {
+        const fetchedPatient = { ...newPatient };
+        const borndate = fetchedPatient.borndate.split("/");
+        fetchedPatient.bornday = borndate[0];
+        fetchedPatient.bornmonth = borndate[1];
+        fetchedPatient.bornyear = borndate[2];
+        delete fetchedPatient.borndate;
+        return { ...prev, patient: fetchedPatient };
+      });
+      setProcessing(false);
+      toast("Paciente Actualizado", "success");
     });
   };
 
-  const deletePatient = () => {
-    if (deleting) {
+  const onDeletePatient = () => {
+    if (processing) {
       return;
     }
 
-    runningDelete(true);
+    setProcessing(true);
 
-    ipcRenderer.invoke("patients", "delete", patient.id).then((res) => {
-      if (res === true) {
-        history.push("/");
-      } else {
-        runningDelete(false);
+    deletePatient(patient.id).then((res) => {
+      setProcessing(false);
+
+      if (res !== true) {
+        return res;
       }
+
+      return history.push("/");
     });
   };
 
@@ -314,17 +294,50 @@ export default function PatientDetails({ match: { params }, history }) {
                 </div>
                 <div>
                   <label htmlFor="borndate">Fecha de Nacimiento</label>
-                  <input
-                    spellCheck="false"
-                    type="text"
-                    name="borndate"
-                    id="borndate"
-                    onChange={onChangeBornDate}
-                    value={patient.borndate}
-                  />
-                  <span className="error">
-                    {errors.borndate && errors.borndate}
-                  </span>
+                  <div className="_3fields">
+                    <span>
+                      <label htmlFor="bornday">Dia</label>
+                      <input
+                        type="text"
+                        name="bornday"
+                        id="bornday"
+                        onChange={onChangeNumber}
+                        value={patient.bornday}
+                        placeholder="31"
+                      />
+                      <span className="error">
+                        {errors.bornday && errors.bornday}
+                      </span>
+                    </span>
+                    <span>
+                      <label htmlFor="bornmonth">Mes</label>
+                      <input
+                        type="text"
+                        name="bornmonth"
+                        id="bornmonth"
+                        onChange={onChangeNumber}
+                        value={patient.bornmonth}
+                        placeholder="12"
+                      />
+                      <span className="error">
+                        {errors.bornmonth && errors.bornmonth}
+                      </span>
+                    </span>
+                    <span>
+                      <label htmlFor="bornyear">Año</label>
+                      <input
+                        type="text"
+                        name="bornyear"
+                        id="bornyear"
+                        onChange={onChangeNumber}
+                        value={patient.bornyear}
+                        placeholder="2000"
+                      />
+                      <span className="error">
+                        {errors.bornyear && errors.bornyear}
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -435,7 +448,7 @@ export default function PatientDetails({ match: { params }, history }) {
           </div>
           <div className="_3btns">
             <button type="submit" className="save-btn" disabled={processing}>
-              {saving ? "GUARDANDO..." : "GUARDAR"}
+              GUARDAR
             </button>
             <button type="button" className="print-btn" disabled={processing}>
               IMPRIMIR
@@ -443,10 +456,10 @@ export default function PatientDetails({ match: { params }, history }) {
             <button
               type="button"
               className="delete-btn"
-              onClick={deletePatient}
+              onClick={onDeletePatient}
               disabled={processing}
             >
-              {deleting ? "ELIMINANDO..." : "ELIMINAR"}
+              ELIMINAR
             </button>
           </div>
         </form>

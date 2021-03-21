@@ -1,4 +1,4 @@
-import { usePatientsContext } from "../../../../contexts/patients";
+import { usePatientsModel } from "../../../../models/patient";
 
 import PatientListItem from "../../../shared/PatientListItem";
 
@@ -10,7 +10,7 @@ export default function SelectPatient({ onSelectPatient }) {
     searching,
     getAllPatients,
     changeSearching,
-  } = usePatientsContext();
+  } = usePatientsModel();
 
   function onSubmit(e) {
     e.preventDefault();

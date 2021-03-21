@@ -3,8 +3,8 @@ import MainLayout from "../../layouts/MainLayout";
 import "../../../static/styles/add-patient/styles.css";
 
 import Editor from "../../shared/Editor";
-
-const { ipcRenderer } = window.require("electron");
+import { usePatientsModel } from "../../../models/patient";
+import { useToast } from "../../../contexts/toast";
 
 const PATIENT_DEFAULT = {
   name: "",
@@ -47,6 +47,9 @@ export default function AddPatient({ history }) {
     patient: { ...PATIENT_DEFAULT },
     errors: { ...ERROR_DEFAULT },
   });
+
+  const { createPatient } = usePatientsModel();
+  const toast = useToast();
 
   const [saving, setSaving] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -95,44 +98,6 @@ export default function AddPatient({ history }) {
 
   const onChangeNumber = (e) => {
     if (!isNaN(e.target.value)) {
-      setState({
-        ...state,
-        patient: {
-          ...patient,
-          [e.target.name]: e.target.value,
-        },
-      });
-    }
-  };
-
-  const onChangeBornDate = (e) => {
-    if (e.target.value.length > 10) {
-      return;
-    }
-
-    if (e.target.value.length < patient.borndate.length) {
-      setState({
-        ...state,
-        patient: {
-          ...patient,
-          [e.target.name]: e.target.value,
-        },
-      });
-      return;
-    }
-
-    const lastChar =
-      e.target.value.length > 0
-        ? e.target.value[e.target.value.length - 1]
-        : "";
-
-    if (!isNaN(lastChar)) {
-      if (e.target.value.length === 2) {
-        e.target.value += "/";
-      } else if (e.target.value.length === 5) {
-        e.target.value += "/";
-      }
-
       setState({
         ...state,
         patient: {
@@ -203,9 +168,14 @@ export default function AddPatient({ history }) {
     delete newPatient.bornmonth;
     delete newPatient.bornyear;
 
-    ipcRenderer
-      .invoke("patients", "create", newPatient)
-      .then(() => history.push("/"));
+    createPatient(newPatient).then((res) => {
+      if (typeof res === "string") {
+        return console.log(res);
+      }
+
+      toast("Paciente Creado", "success");
+      history.push("/patients/all");
+    });
   };
 
   return (

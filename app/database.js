@@ -31,9 +31,20 @@ async function startDB() {
             id INTEGER PRIMARY KEY,
             patient INTEGER NOT NULL,
             date INTEGER NOT NULL,
+            status INTEGER DEFAULT 0,
             created_at INTEGER NOT NULL,
             FOREIGN KEY(patient) REFERENCES patients(id)
         )`);
+
+  await db.run(`CREATE INDEX IF NOT EXISTS date_index ON appointments 
+        (
+          date ASC
+        );`);
+
+  await db.run(`CREATE INDEX IF NOT EXISTS last_update_index ON patients 
+        (
+          last_update DESC
+        );`);
 
   return db;
 }

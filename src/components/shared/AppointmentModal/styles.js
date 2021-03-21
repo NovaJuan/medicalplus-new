@@ -53,8 +53,18 @@ export const Container = styled.div`
   .options {
     display: flex;
     justify-content: flex-end;
+    margin-top: 0.5rem;
   }
 
+  .start {
+    padding: 0.5rem 1rem;
+    background-color: #44bd32;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    margin-right: 2rem;
+  }
   .cancel {
     padding: 0.5rem 1rem;
     background-color: #e74c3c;

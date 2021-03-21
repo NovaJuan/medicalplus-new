@@ -1,9 +1,9 @@
-import "../../../static/styles/navbar/styles.css";
+import { Container } from "./styles";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="navbar">
+    <Container>
       <div className="nav-container">
         <Link to="/" className="nav-logo">
           <img src="file://media/static/logo.png" alt="" />
@@ -21,7 +21,7 @@ export default function Navbar() {
             </span>
             <div className="dropdown">
               <span>
-                <Link to="/">Ver Pacientes</Link>
+                <Link to="/patients/all">Todos los Pacientes</Link>
               </span>
               <span>
                 <Link to="/patients/add">Añadir Paciente</Link>
@@ -29,7 +29,17 @@ export default function Navbar() {
             </div>
           </div>
           <div className="link">
-            <span className="label">Citas</span>
+            <span className="label">
+              Citas <img src="file://media/static/arrow-down.svg" alt="" />
+            </span>
+            <div className="dropdown">
+              <span>
+                <Link to="/appointments/all">Todas las Citas</Link>
+              </span>
+              <span>
+                <Link to="/appointments/add">Añadir Cita</Link>
+              </span>
+            </div>
           </div>
           <div className="link">
             <Link to="/settings" className="label">
@@ -38,6 +48,6 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-    </nav>
+    </Container>
   );
 }

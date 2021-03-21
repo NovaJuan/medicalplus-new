@@ -21,25 +21,55 @@ module.exports = (window) => {
 };
 
 async function getPatients(event, window, data) {
-  const db = await startDB();
-  let patients = [];
-  if (typeof data === "string") {
-    patients = await db.all(
-      `SELECT * FROM patients WHERE name LIKE :search OR docid LIKE :search ORDER BY last_update DESC`,
-      { ":search": `%${data}%` }
-    );
-  } else {
-    patients = await db.all(
-      `SELECT * FROM patients ORDER BY last_update DESC LIMIT 10`
-    );
+  const search = data.search || "";
+  const page = data.page || 1;
+
+  const itemsPerPage = 8;
+  const limit = itemsPerPage;
+  const offset = (page - 1) * limit;
+
+  let filtersChainStarted = false;
+  const filterJoin = () => {
+    const clause = filtersChainStarted ? "AND" : "WHERE";
+    filtersChainStarted = true;
+    return clause;
+  };
+
+  let sql = "";
+
+  if (search) {
+    sql += ` ${filterJoin()} name LIKE '%${search}%' OR docid LIKE '%${search}%'`;
   }
+
+  sql += " ORDER BY last_update DESC";
+
+  const db = await startDB();
+
+  const totalCount = (await db.get(`SELECT COUNT(*) FROM patients ${sql}`))[
+    "COUNT(*)"
+  ];
+
+  sql += ` LIMIT ${limit} OFFSET ${offset}`;
+
+  const patients = await db.all(`SELECT * FROM patients ${sql}`);
+
   await db.close();
-  return patients;
+
+  return {
+    totalCount,
+    patients,
+    nextPage: offset + limit < totalCount ? page + 1 : null,
+    prevPage: page > 1 ? page - 1 : null,
+  };
 }
 
 async function getPatient(event, window, data) {
   const db = await startDB();
   const patient = await db.get(`SELECT * FROM patients WHERE id=?`, data);
+  patient.appointments = await db.get(
+    "SELECT * FROM appointments WHERE patient = ?",
+    patient.id
+  );
   await db.close();
   return patient;
 }
@@ -139,6 +169,7 @@ async function updatePatient(event, window, data) {
   const oldPatient = await db.get(`SELECT * FROM patients WHERE id = ?`, id);
 
   let newPatient = { ...oldPatient, ...data };
+  delete newPatient.appointments;
 
   if (newPatient.image !== oldPatient.image) {
     const { unlink } = require("fs-extra");

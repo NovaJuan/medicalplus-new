@@ -1,13 +1,13 @@
-import { AppointmentsContextProvider } from "./appointments";
-import { PatientsContextProvider } from "./patients";
 import { ModalContextProvider } from "./modal";
+import { LoadingContextProvider } from "./loading";
+import { ToastContextProvider } from "./toast";
 
 export default function ContextProvider({ children }) {
   return (
-    <PatientsContextProvider>
-      <AppointmentsContextProvider>
+    <ToastContextProvider>
+      <LoadingContextProvider>
         <ModalContextProvider>{children}</ModalContextProvider>
-      </AppointmentsContextProvider>
-    </PatientsContextProvider>
+      </LoadingContextProvider>
+    </ToastContextProvider>
   );
 }

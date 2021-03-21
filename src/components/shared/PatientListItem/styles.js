@@ -1,4 +1,6 @@
-.patient-list-item {
+import styled from "styled-components";
+
+export const Container = styled.div`
   display: flex;
   align-items: center;
   border: 1px solid #03d403;
@@ -37,11 +39,13 @@
     color: #00a808;
     font-size: 0.7rem;
     padding-left: 0.7rem;
-    border-left: 1px solid #03d403;
+    padding-right: 0.7rem;
+    text-align: right;
+    margin-left: auto;
     span {
       display: block;
       font-size: 1rem;
       font-weight: 600;
     }
   }
-}
+`;

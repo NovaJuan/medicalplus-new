@@ -1,19 +1,24 @@
-import "./styles/styles.css";
 import { docidFormatter } from "../../../lib/patientHelpers";
 
 import { useModal } from "../../../contexts/modal";
-import { useAppointmentsContext } from "../../../contexts/appointments";
 import AppointmentModal from "../AppointmentModal";
 
-export default function AppointmentListItem({ appointment }) {
+import { Container } from "./styles";
+
+export default function AppointmentListItem({
+  appointment,
+  onDelete = () => {},
+}) {
   const modal = useModal();
-  const { getAppointment, clearFetchedAppointment } = useAppointmentsContext();
 
   function openModal() {
-    getAppointment(appointment.id);
-    modal(AppointmentModal, () => {
-      clearFetchedAppointment();
-    });
+    modal(
+      AppointmentModal,
+      () => {
+        // clearAppointment();
+      },
+      { onDelete, appointment }
+    );
   }
 
   const appointmentTime = new Date(appointment.date)
@@ -25,8 +30,15 @@ export default function AppointmentListItem({ appointment }) {
     .replace(" p. m.", "<small>PM</small>")
     .replace(" a. m.", "<small>AM</small>");
 
+  const appointmentDate = new Date(appointment.date).toLocaleDateString(
+    "es-ES"
+  );
+
   return (
-    <div className="appointment-list-item" onClick={openModal}>
+    <Container
+      onClick={openModal}
+      className={`${appointment.status === 1 && "finished"}`}
+    >
       <img
         src={`file://media/${
           appointment.patient.image || "static/no-image.jpg"
@@ -37,9 +49,18 @@ export default function AppointmentListItem({ appointment }) {
         <h4 className="name">{appointment.patient.name}</h4>
         <p className="docid">{docidFormatter(appointment.patient.docid)}</p>
       </div>
-      <div className="time">
-        <p dangerouslySetInnerHTML={{ __html: appointmentTime }} />
-      </div>
-    </div>
+      {appointment.status === 1 && (
+        <div className="finished">
+          <p className="date">{appointmentDate}</p>
+          <p>Finalizada</p>
+        </div>
+      )}
+      {appointment.status === 0 && (
+        <div className="time">
+          <p className="date">{appointmentDate}</p>
+          <p dangerouslySetInnerHTML={{ __html: appointmentTime }} />
+        </div>
+      )}
+    </Container>
   );
 }

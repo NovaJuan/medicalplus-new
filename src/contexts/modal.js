@@ -16,18 +16,20 @@ export function useCloseModal() {
 export function ModalContextProvider({ children }) {
   const [Component, setComponent] = useState(null);
   const [onClose, setOnClose] = useState(null);
+  const [props, setProps] = useState({});
   const [isOpen, setIsOpen] = useState(false);
 
-  function createModal(component, onCloseCb) {
+  function createModal(component, onCloseCb, props) {
     setComponent(() => component);
     setOnClose(() => onCloseCb);
+    setProps(props);
     setIsOpen(true);
   }
 
   function closeModal() {
-    console.log("closing...");
     setIsOpen(false);
     setComponent(null);
+    setProps({});
     onClose();
     setOnClose(null);
   }
@@ -37,7 +39,9 @@ export function ModalContextProvider({ children }) {
       value={{ createModal, closeModal, Component, isOpen }}
     >
       {children}
-      {isOpen && <ModalContainer>{Component && <Component />}</ModalContainer>}
+      {isOpen && (
+        <ModalContainer>{Component && <Component {...props} />}</ModalContainer>
+      )}
     </ModalContext.Provider>
   );
 }

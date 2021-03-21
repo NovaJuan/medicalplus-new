@@ -1,23 +1,24 @@
-import { useAppointmentsContext } from "../../../../contexts/appointments";
+import { useAppointmentsModel } from "../../../../models/appointment";
 import { useEffect } from "react";
 import AppointmentListItem from "../../../shared/AppointmentListItem";
 
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-export default function SelectDate({ finishAppointment }) {
+export default function SelectDate({
+  finishAppointment,
+  hour,
+  minute,
+  meridem,
+  error,
+  setNewAppointment,
+}) {
   const {
     date,
     changeDate,
     appointments,
     getAllAppointments,
-    minute,
-    hour,
-    changeTime,
-    meridem,
-    error,
-    changeMeridem,
-  } = useAppointmentsContext();
+  } = useAppointmentsModel();
 
   useEffect(() => {
     getAllAppointments();
@@ -25,19 +26,39 @@ export default function SelectDate({ finishAppointment }) {
 
   const onChangeSelect = (e) => {
     if (e.target.name === "hour") {
-      changeTime("hour", parseInt(e.target.value));
+      setNewAppointment((prev) => ({
+        ...prev,
+        hour: parseInt(e.target.value),
+      }));
     } else if (e.target.name === "minute") {
-      changeTime("minute", parseInt(e.target.value));
+      setNewAppointment((prev) => ({
+        ...prev,
+        minute: parseInt(e.target.value),
+      }));
     }
   };
 
   const onChangeMeridem = (e) => {
     if (e.target.id === "am") {
-      changeMeridem(0);
+      setNewAppointment((prev) => ({
+        ...prev,
+        meridem: "am",
+      }));
     } else if (e.target.id === "pm") {
-      changeMeridem(1);
+      setNewAppointment((prev) => ({
+        ...prev,
+        meridem: "pm",
+      }));
     }
   };
+
+  function onChangeDate(newDate) {
+    changeDate(newDate);
+    setNewAppointment((prev) => ({
+      ...prev,
+      date: newDate,
+    }));
+  }
 
   return (
     <div className="select-date">
@@ -47,7 +68,7 @@ export default function SelectDate({ finishAppointment }) {
 
         <div className="wrapper">
           <div className="left">
-            <Calendar onChange={changeDate} value={date} />
+            <Calendar onChange={onChangeDate} />
             <div className="select-hour">
               <h3>Seleccionar Hora</h3>
               <div className="hour">
@@ -123,7 +144,11 @@ export default function SelectDate({ finishAppointment }) {
             <div className="appointments-list">
               {appointments &&
                 appointments.map((ap) => (
-                  <AppointmentListItem appointment={ap} key={ap.id} />
+                  <AppointmentListItem
+                    appointment={ap}
+                    key={ap.id}
+                    onDelete={getAllAppointments}
+                  />
                 ))}
               {appointments && appointments.length === 0 && (
                 <p>No hay citas apartadas para este dia.</p>

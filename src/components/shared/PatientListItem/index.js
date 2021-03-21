@@ -1,9 +1,9 @@
-import "./styles/styles.css";
+import { Container } from "./styles";
 import { docidFormatter } from "../../../lib/patientHelpers";
 
 export default function PatientListItem({ patient, onClick }) {
   return (
-    <div className="patient-list-item" onClick={onClick}>
+    <Container onClick={onClick}>
       <img
         src={`file://media/${patient.image || "static/no-image.jpg"}`}
         alt=""
@@ -20,6 +20,6 @@ export default function PatientListItem({ patient, onClick }) {
         Ultima Visita
         <span>{new Date(patient.last_update).toLocaleDateString("es-ES")}</span>
       </div>
-    </div>
+    </Container>
   );
 }

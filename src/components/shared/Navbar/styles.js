@@ -1,4 +1,6 @@
-.navbar {
+import styled from "styled-components";
+
+export const Container = styled.nav`
   background-color: #00b460;
   width: 100%;
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
@@ -82,4 +84,4 @@
       display: block;
     }
   }
-}
+`;
